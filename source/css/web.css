@@ -39,11 +39,11 @@
   --column-width: 50vw;
 }
 
-@supports (width: clamp(28px, 5vh, 56px)) {
+@supports (width: clamp(28px, 5vh, 48px)) {
   :root {
     /* Baseline defaults for all devices and browsers that support clamp() */
     /* Edge Chromium on Android has an issue with supporting clamp() for widths */
-    --base-unit: clamp(28px, 5vh, 56px);
+    --base-unit: clamp(28px, 5vh, 48px);
     --column-width: clamp(480px, 50vw, 640px);
   }
 }
@@ -59,7 +59,7 @@
 
   --vertical-padding: var(--base-unit);
 
-    /* this 4.0 is a bit cryptic; we are making space for the toc button:; */
+  /* this 4.0 is a bit cryptic; we are making space for the toc button:; */
   --column-height: calc(100vh - calc(var(--vertical-padding) * 4.0));
   --column-gap: var(--base-unit);
 
@@ -104,7 +104,7 @@ html {
   font-size: var(--font-size);
   scroll-behavior: smooth;
 
-  /* ss11 gives us the more normal 1 digit */
+  /* ss11 gives us the more normal 1 digit in Vollkorn */
   font-feature-settings: "kern", "liga", "ss11";
 }
 
@@ -138,7 +138,6 @@ div.tutorial {
   height: calc( var(--column-height) - 1px ); /* full 100vh was causing an extra page break */
 
   text-align: center;
-
   break-after: column;
 }
 
@@ -147,12 +146,12 @@ div.tutorial h2 {
   flex-grow: 0;
   margin-top: 0;
   margin-bottom: var(--line-height);
-
   font-family: var(--body-text-font-stack); /* a bit ugly */
 }
 
 div.tutorial p {
   flex-grow: 0;
+  text-indent: 0;
   margin-bottom: var(--line-height);
 }
 
@@ -277,7 +276,6 @@ nav div.controls button {
 
   margin: 0 var(--base-unit-half) 0 0;
   width: var(--base-unit);
-  /*line-height: calc( var(--base-unit) * 2.0 );*/
   height: auto;
 
   padding: 0;
@@ -285,7 +283,7 @@ nav div.controls button {
   cursor: pointer;
   text-align: center;
   color: var(--spot-color);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 nav div.controls button:last-child {
@@ -300,7 +298,6 @@ nav h1 {
   margin: 0 0 var(--line-height) 0;
   width: calc( var(--column-width) * 0.9 - calc( var(--base-unit) * 2.0 ) );
   padding: 0;
-  /* text-transform: uppercase; */
   font-style: italic;
   line-height: var(--line-height);
   font-size: 1rem;
@@ -401,7 +398,7 @@ img {
   -webkit-column-break-inside: avoid;
 
   break-before: column;
-  /*max-width: 100%;*/
+  /* max-width: 100%; */
   mix-blend-mode: multiply;
   object-fit: contain; /* contain? */
 }
@@ -446,8 +443,7 @@ div.book {
   column-width: var(--column-width);
 
   margin: var(--base-unit-half);
-  width: var(--column-width); /* must match column-width, or am fucked */
-
+  width: var(--column-width);
   height: var(--column-height);
 }
 
@@ -512,22 +508,6 @@ div.book h1 {
   break-before: column;
 }
 
-/* these are the "shades" that obscure text on the sides of the screen in wider browsers */
-
-/* originally, I had some SVG arrows hanging around but I don't think they're necessary */
-
-/* for svg encoding: https://yoksel.github.io/url-encoder/ */
-/* thus, commented out */
-
-/*svg original:
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 60 90" xml:space="preserve">
-  <g>
-    <rect x="0" y="0" width="60" height="90" style="fill: rgba(255, 255, 255, 0.75);" />
-    <polygon points="30,45 60,30 60,60" style="fill: rgba(0, 0, 0, 0.125);" />
-  </g>
-</svg>
-*/
-
 div.book::before {
   content: "";
   position: fixed;
@@ -543,9 +523,6 @@ div.book::before {
                               var(--shade-color-origin) 95%,
                               var(--shade-color-destination) 100%);
 
-  /* i just don't think this is necessary...
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' x='0px' y='0px' width='100%25' height='100%25' viewBox='0 0 60 90' xml:space='preserve'%3E%3Cg%3E%3Crect x='0' y='0' width='60' height='90' style='fill: rgba(255, 255, 255, 0.75);' /%3E%3Cpolygon points='30,45 60,30 60,60' style='fill: rgba(0, 0, 0, 0.125);' /%3E%3C/g%3E%3C/svg%3E");
-  */
 }
 
 div.book::after {
@@ -562,30 +539,6 @@ div.book::after {
                               var(--shade-color-origin) 0%,
                               var(--shade-color-origin) 95%,
                               var(--shade-color-destination) 100%);
-}
-
-/* TO MAKE SNAP-SCROLL WORK ON MOBILE */
-
-/* inspiration:
-   https://github.com/jpamental/moby-dick/pull/5/commits/ec022061684ae4c233fba047fb341b41deeead6c */
-
-div.shadow-page-container {
-  display: none;
-  position: relative;
-  /* margin: var(--base-unit-half); */
-  width: calc( 100vw * var(--page-count));
-}
-
-div.shadow-page {
-  background-color: transparent;
-  float: left;
-  height: 1px;
-  margin-left: 0;
-  margin-right: var(--column-gap);
-  width: var(--column-width);
-  scroll-snap-align: start;
-  position: relative;
-  z-index: -10;
 }
 
 /* PRINT STYLES */
@@ -641,24 +594,13 @@ div.print-cover div.title h2 {
 
   :root {
     --column-width: calc(100vw - var(--base-unit));
-    /* this is quite blunt */
-    /* but it's to compensate for mobile browser chrome */
-    /* maybe there's a more elegant solution? */
-    --column-height: 65vh;
+    --column-height: calc(100vh - calc(var(--vertical-padding) * 5.0));
+    /* x5.0 gets us enough clearance for mobile browser chrome */
+    /* I hate it, but I don't think there's presently a better solution */
   }
 
   body {
     height: calc( var(--column-height) + var(--vertical-padding) * 2.0 );
-    /* having this set at 100vh was causing that weird mobile slip problem */
-
-    /* this is really interesting: */
-    scroll-snap-type: x mandatory;
-    /* idea from: https://github.com/jpamental/moby-dick/pull/5 */
-    /* with thanks to kyle gach */
-  }
-
-  div.shadow-page-container {
-    display: block;
   }
 
   div.book::before, div.book::after {
@@ -668,15 +610,12 @@ div.print-cover div.title h2 {
 }
 
 @media screen and (min-width: 640px) {
-
   div.book {
     margin-left: calc(50vw - var(--column-width) / 2.0);
   }
-
 }
 
 @media screen and (min-height: 1000px) {
-
   :root {
     --vertical-padding: calc( var(--base-unit) * 2.0 );
   }
@@ -684,7 +623,6 @@ div.print-cover div.title h2 {
   div.bookmark {
     top: calc( var(--vertical-padding) * -1.5 ); /* now THAT is a stupid magic number */
   }
-
 }
 
 @media print {
